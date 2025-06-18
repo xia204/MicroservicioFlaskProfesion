@@ -17,27 +17,32 @@ class ProfesionesService:
     def get_by_nombre(nombre):
         return Profesion.query.filter_by(nombre=nombre).first()
 
+    # src/services/profesiones_service.py
+
     @staticmethod
-    def create(nombre, descripcion):
-        nueva_profesion = Profesion(
+    def create(nombre, descripcion, status_id):
+        profesion = Profesion(
             id=str(uuid.uuid4()),
             nombre=nombre,
             descripcion=descripcion,
+            status_id=status_id,
             fecha=datetime.utcnow()
         )
-        db.session.add(nueva_profesion)
+        db.session.add(profesion)
         db.session.commit()
-        return nueva_profesion
+        return profesion
 
     @staticmethod
-    def update(profesion_id, nombre=None, descripcion=None):
-        profesion = Profesion.query.filter_by(id=profesion_id).first()
+    def update(profesion_id, nombre, descripcion, status_id=None):
+        profesion = Profesion.query.get(profesion_id)
         if not profesion:
             return None
         if nombre:
             profesion.nombre = nombre
         if descripcion:
             profesion.descripcion = descripcion
+        if status_id:
+            profesion.status_id = status_id
         db.session.commit()
         return profesion
 
